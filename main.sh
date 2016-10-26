@@ -28,21 +28,21 @@ do
 		echo ${profile_cmd} ${impdir}/setup_environment.sh python ${bindir}/job.py $map_name $threshold $n
 	else
 		gmm_name=${n_prev}/${n_prev}.txt
-		n_jobs=$(cat ${gmm_name} |wc -l)
+		n_jobs=$(($(cat ${gmm_name} |wc -l)-1))
 		echo "#n_jobs=${n_jobs}"
 		echo ${profile_cmd} ${impdir}/setup_environment.sh python ${bindir}/job.py $map_name $threshold $n $gmm_name '$((${SGE_TASK_ID}-1))'
 	fi > tmp.txt
 	${bindir}/make_array_from_cmds.sh $jobname 100 ${n_jobs} < tmp.txt > $jobfile
+	rm tmp.txt
 	mkdir -p $n
 	date
 	qsub $jobfile
 	ret=0
 	while ((ret!=1337))
 	do
-		ret=$(qrsh -q desktop.q -N cat_${n} -cwd -hold_jid ${jobname} ${bindir}/cat.sh ${n})
+		ret=$(qrsh -q desktop.q -N cat_${n} -cwd -hold_jid ${jobname} echo 1337)
 	done
-	${bindir}/cat_pickle.py ${n}
+	${impdir}/setup_environment.sh python ${bindir}/cat_pickle.py ${n} ${n}/${n}.txt
 	n_prev=${n}
-	rm ${n}/*.gmm
-	rm -f *.{e,o}[3-9]*
+	#rm -f *.{e,o}[0-9]*
 done
