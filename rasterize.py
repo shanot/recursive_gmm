@@ -16,7 +16,7 @@ try:
 except:
     other_map = None
 
-voxel_size = 5
+voxel_size = 2
 origin = None
 bounding_box = None
 if other_map:

@@ -1,6 +1,6 @@
 #!/bin/zsh
 bindir=${0:h}
-for f in [0-9]*/*txt
+for f in [0-9]*/*_imp.txt
 do
 	if [[ (! -f $f.mrc) || ($f -nt $f.mrc) ]]
 	then
