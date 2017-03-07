@@ -30,7 +30,7 @@ ps = []
 IMP.isd.gmm_tools.decorate_gmm_from_text(fname, ps, m)
 if other_map is None:
     GMM.write_gmm_to_map(
-        ps, fname + '.mrc', voxel_size, bounding_box=bounding_box, origin=origin, fast=True
+        ps, fname + '.mrc', voxel_size, bounding_box=bounding_box, origin=origin, fast=True, factor=cutoff
     )
 else:
     out = GMM.gmm2map(ps, voxel_size, bounding_box=bounding_box,

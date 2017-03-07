@@ -34,10 +34,12 @@ do
 	date
 	qsub $jobfile
 	ret=0
+	#this is a hack because the cluster on which I develop is retarded and sometimes times out.
 	while ((ret!=1337))
 	do
 		ret=$(qrsh -q desktop.q -N cat_${n} -cwd -hold_jid ${jobname} echo 1337)
 	done
 	cat ${n}/${n}*.gmm > ${n}/${n}.txt
+	${bindir}/gmconvert2imp.sh  ${n}/${n}.txt >  ${n}/${n}_imp.txt
 	n_prev=${n}
 done
