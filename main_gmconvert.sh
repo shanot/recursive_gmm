@@ -8,8 +8,8 @@ n_gaussians=$3
 N=$4
 
 bindir=${0:h}
-impdir=~/imp_sam-fast/
-gmconvert=~/gmconvert_MAX/gmconvert
+impdir=~/imp-fast/
+gmconvert=~/gmconvert_MAX_SAM/gmconvert
 
 for ((i=1 ; i<=N ; i++))
 do
