@@ -1,26 +1,10 @@
-#!/bin/zsh
+#!/bin/bash
 
-echo "
-#!/bin/zsh
-# ---
-#$ -N $1
-#$ -cwd
-#$ -S /bin/zsh
-#$ -t 1-$3
-#$ -tc $2
-#$ -q all.q
-# ---
-#1=$1
-#2=$2
-#3=$3
+echo "#!/bin/bash
+#SBATCH --job-name=$1
+#SBATCH --array=1-$3
+
+source ~/modules.sh
 "
-echo '
-module ()
-{
-	eval `/usr/bin/modulecmd bash $*`
-}
-
-source ~/bin/riccardo_modules.sh
-'
 
 cat
