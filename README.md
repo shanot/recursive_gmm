@@ -8,7 +8,7 @@ main_gmconvert.sh MAP_NAME THRESHOLD n N
 ```
 `n` is the number of gaussians per sub-process. 4 is a good guess.
 
-`N` is how many recursion levels will be performed. The result is gmms of size `n^i` with `1<i<N`.
+`N` is how many recursion levels will be performed. The result is gmms of size `n^i` with `1<=i<=N`.
 
 The script creates a sub-directory (called `n^i`) for each recursion level, and the output files are called `n^i.txt` and `n^i_imp.txt`.
 `n^i` contains the gmm in `gmconvert` format, and `n^i_imp.txt` contains the gmm in `IMP` format (the conversion is handeld by `gmconvert2imp.sh`.
