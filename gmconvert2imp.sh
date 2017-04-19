@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 awk '
 BEGIN{i=0}
