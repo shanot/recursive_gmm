@@ -1,0 +1,20 @@
+set terminal pdfcairo size 8.5cm, 5.25cm font 'helvetica,12'
+
+unset key
+set output 'plots/fscs.pdf'
+p for [f in system('ls -v [0-9]*/*_imp.gmm.mrc.fsc')] f t f, 0.143
+set output 'plots/resolution.pdf'
+resolution=system('cat resolution.txt')
+resolution_rmeasure=system(sprintf("awk -F ':' '/Resolution at FSC = 0.143:/{print $2}' < rmeasure_log.txt | tr -d ' '", f))
+set logscale x 2
+set logscale y 10
+set title system("ls emd*map")
+set xlabel '# Gaussians'
+set ylabel sprintf('(r-resolution)/resolution')
+system('for f in [0-9]*/*_imp.gmm.resolution; do echo $(dirname $f) $(cat $f); done | sort -g > tmp.txt')
+p	'tmp.txt' u 1:(abs($2-resolution)/resolution) t 'EMDB',\
+	'tmp.txt' u 1:(abs($2-resolution_rmeasure)/resolution_rmeasure) t 'rmeasure',\
+	'tmp.txt' u 1:(abs($2-resolution)/resolution):(sprintf("%.2f", $2)) with labels left  offset character 0.1,0.1 font ',10' notitle,\
+	'tmp.txt' u 1:(abs($2-resolution_rmeasure)/resolution_rmeasure):(sprintf("%.2f", $2)) with labels left  offset character 0.1,0.1 font ',10' notitle
+
+
