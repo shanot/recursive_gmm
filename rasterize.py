@@ -1,11 +1,7 @@
 import IMP
 import IMP.em
 import IMP.isd.gmm_tools as GMM
-import numpy as np
-import matplotlib.pyplot as plt
 import sys
-
-from sklearn.decomposition import PCA
 
 fname = sys.argv[1]
 other_map = None
