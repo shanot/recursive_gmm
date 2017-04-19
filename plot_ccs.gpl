@@ -1,0 +1,8 @@
+set terminal pdfcairo enhanced 
+
+set output 'plots/cc.pdf'
+set key bottom right title "Resolution and EMDB#" box
+set logscale x 2
+set xlabel 'Number of components'
+set ylabel 'Data-GMM Cross-Correlation'
+p for [i=0:0+system('echo $(( $(ls -d [0-9]* | wc -l)-1))')] "data.dat" u 2:3 every :::i::i title column(4) lc i w lp, 0.95 lc 0 notitle
