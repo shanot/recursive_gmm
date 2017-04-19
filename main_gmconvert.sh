@@ -29,6 +29,7 @@ bindir=${0:h}
 impdir=~/imp-fast/
 gmconvert=~/gmconvert_MAX_SAM/gmconvert
 
+${gmconvert} -imap ${map_name} -zth ${threshold} -oimap threshold.map -ogmm /dev/null -ng 0
 for ((i=$i0 ; i<=N ; i++))
 do
 	n=$((n_gaussians**i))
@@ -40,7 +41,7 @@ do
 	then
 		echo ${profile_cmd} ${gmconvert} -imap ${map_name} -ogmm $n/$n.gmm -ng ${n} -zth ${threshold}
 	else
-		gmm_name=${n_prev}/${n_prev}.txt
+		gmm_name=${n_prev}/${n_prev}.gmm
 		n_jobs=$(awk '/NGAUSS/{s+=$3}END{print s}' ${gmm_name})
 		gmm_list=${n_prev}/GMM.list
 		echo echo ${gmm_name} '$((SLURM_ARRAY_TASK_ID-1+offset))' \> 'tmp_$((SLURM_ARRAY_TASK_ID+offset)).txt'  
@@ -66,7 +67,5 @@ do
 	jobids=${jobids%?}
 	echo waiting for jobids=$jobids
 	#not ok is because kawabata exits 1
-	srun --job-name 'cat' --dependency=afternotok:${jobids} date
-	cat ${n}/${n}*.gmm > ${n}/${n}.txt
-	${bindir}/gmconvert2imp.sh  ${n}/${n}.txt >  ${n}/${n}_imp.txt
+	srun --job-name 'post' --dependency=afternotok:${jobids} --export=ALL,map_name=threshold.map,n=${n},bindir=${bindir} --pty ${bindir}/postprocess.sh
 done
