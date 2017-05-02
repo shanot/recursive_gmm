@@ -7,7 +7,7 @@ BEGIN{i=0}
 /REMARK GAUSS.* CovM *xx /{Cxx=$6 ; Cxy=$8 ; Cxz=$10}
 /REMARK GAUSS.* CovM *yy /{
 	Cyy=$6 ; Cyz=$8 ; Czz=$10;
-	printf("|%d|%g|%g %g %g|%g %g %g %g %g %g %g %g %g|\n",i,W,Mx,My,Mz,Cxx,Cxy,Cxz,Cxy,Cyy,Cyz,Cxz,Czy,Czz)
+	printf("|%d|%s|%s %s %s|%s %s %s %s %s %s %s %s %s|\n",i,W,Mx,My,Mz,Cxx,Cxy,Cxz,Cxy,Cyy,Cyz,Cxz,Cyz,Czz)
 	i++
 }
 ' < $1
