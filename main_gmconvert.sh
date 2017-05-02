@@ -62,7 +62,7 @@ do
 		date
 		sbatch -o ${n}/"slurm-%a_${i}.out" $jobfile
 	done
-	rm tmp.txt
+	rm tmp*.txt
 	jobids=$(squeue -O arrayjobid -u $(whoami) -n ${jobname} -S i -h | tr '\n' ':' | tr -d ' ')
 	jobids=${jobids%?}
 	echo waiting for jobids=$jobids
