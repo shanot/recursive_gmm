@@ -2,19 +2,62 @@ set terminal pdfcairo size 8.5cm, 5.25cm font 'helvetica,12'
 
 unset key
 set output 'plots/fscs.pdf'
-p for [f in system('ls -v [0-9]*/*_imp.gmm.mrc.fsc')] f t f, 0.143
+p for [f in system('ls -v [0-9]*/*.fsc')] f t f, 0.143
 set output 'plots/resolution.pdf'
 resolution=system('cat resolution.txt')
-resolution_rmeasure=system(sprintf("awk -F ':' '/Resolution at FSC = 0.143:/{print $2}' < rmeasure_log.txt | tr -d ' '", f))
-set logscale x 2
+#resolution_rmeasure=system(sprintf("awk -F ':' '/Resolution at FSC = 0.143:/{print $2}' < rmeasure_log.txt | tr -d ' '", f))
+set logscale x 10
+set format x '%.0e'
 set logscale y 10
-set title system("ls emd*map")
+set title system("echo $(ls emd*map) $(cat resolution.txt)A")
 set xlabel '# Gaussians'
 set ylabel sprintf('(r-resolution)/resolution')
-system('for f in [0-9]*/*_imp.gmm.resolution; do echo $(dirname $f) $(cat $f); done | sort -g > tmp.txt')
-p	'tmp.txt' u 1:(abs($2-resolution)/resolution) t 'EMDB',\
-	'tmp.txt' u 1:(abs($2-resolution_rmeasure)/resolution_rmeasure) t 'rmeasure',\
-	'tmp.txt' u 1:(abs($2-resolution)/resolution):(sprintf("%.2f", $2)) with labels left  offset character 0.1,0.1 font ',10' notitle,\
-	'tmp.txt' u 1:(abs($2-resolution_rmeasure)/resolution_rmeasure):(sprintf("%.2f", $2)) with labels left  offset character 0.1,0.1 font ',10' notitle
+#system('for f in [0-9]*/*.gmm.resolution; do echo $(dirname $f) $(head -n1 $f); done | sort -g > tmp.txt')
+system('for f in [0-9]*/*.gmm.resolution; do echo $(dirname $f) $(grep -c "REMARK.*W" $(dirname $f)/$(basename $f .resolution)) $(head -n1 $f) $(cat $(dirname $f)/$(basename $f .resolution).threshold.resolution); done | sort -g > tmp.txt')
+molwt=0.0+system("grep molWtTheo header/*xml | head -n 1 | cut -d '>' -f2 | cut -d '<' -f 1")
+set key top right
+p	'tmp.txt' u 2:(abs($3-resolution)/resolution) t 'original map',\
+	'tmp.txt' u 2:(abs($3-resolution)/resolution):(sprintf("%.2f", $3)) with labels left  offset character 0.1,0.1 font ',10' notitle
+
+set output 'plots/resolution_threshold.pdf'
+p	'tmp.txt' u 2:(abs($4-resolution)/resolution) t 'EMDB',\
+	'tmp.txt' u 2:(abs($4-resolution)/resolution):(sprintf("%.2f", $4)) with labels left  offset character 0.1,0.1 font ',10' notitle
+unset output
+set table 'resolution_table.txt'
+set format x '%e'
+plot 'tmp.txt' u 2:(abs($4-resolution)/resolution):(sprintf("%.2f", $4)) with labels left  offset character 0.1,0.1 font ',10' notitle
+set format x '%.0e'
+#system('rm tmp.txt')
+
+set output 'plots/resolution_raw.pdf'
+unset logscale
+set logscale xy
+unset format
+A=1
+a=-10
+B=0
+c=1
+#f(x,A,a,B,c)=A*exp((x/a)**c)-B
+#fit f(x,A,a,B,c) 'tmp.txt' u 2:(($3-resolution)/resolution) via A,a
+#fit f(x,A,a,B,c) 'tmp.txt' u 2:(($3-resolution)/resolution) via A,a,B
+#fit f(x,A,a,B,c) 'tmp.txt' u 2:(($3-resolution)/resolution) via A,a,B,c
+#a=1
+#b=-1
+#c=0
+#g(x,a,b,c)=a*x**b-c
+#fit g(x,a,b,c) 'tmp.txt' u 2:(($3-resolution)/resolution) via a,b
+set samples 1000
+
+set table 'test.txt'
+p	'tmp.txt' u 2:(($3-resolution)/resolution):(1.0) smooth unique w lp t 'original map',\
+	'tmp.txt' u 2:(($3-resolution)/resolution):(sprintf("%.2f", $3)) with labels left  offset character 0.1,0.1 font ',10' notitle
+unset table
+set output 'plots/resolution_raw.pdf'
+replot
 
 
+
+	#g(x,a,b,c) w l t sprintf("%.1f*x^%.1f-%.1f",a,b,c)
+	#f(x,A,a,B,c) w l t sprintf("%.1f exp((g/%.1f)^%.1f ) - %.1f",A,a,B,c)
+#	'tmp.txt' u 2:(($4-resolution)/resolution) t 'threshold map',\
+#	'tmp.txt' u 2:(($4-resolution)/resolution):(sprintf("%.2f", $4)) with labels left  offset character 0.1,0.1 font ',10' notitle
