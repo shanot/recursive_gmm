@@ -1,8 +1,18 @@
-set terminal pdfcairo enhanced 
+set terminal pdfcairo enhanced size 29cm,21cm
+load '~/gnuplot_config.gpl'
 
+system('mkdir -p plots')
 set output 'plots/cc.pdf'
-set key bottom right title "Resolution and EMDB#" box
-set logscale x 2
-set xlabel 'Number of components'
+set logscale x
+set xlabel 'Number of components per molecular weight (#gaussian/MDa)'
 set ylabel 'Data-GMM Cross-Correlation'
-p for [i=0:0+system('echo $(( $(ls -d [0-9]* | wc -l)-1))')] "data.dat" u 2:3 every :::i::i title column(4) lc i w lp, 0.95 lc 0 notitle
+set key bottom right title "Resolution and EMDB#" box
+set key autotitle columnhead outside
+p for [i=0:-1+system('ls -ld [0-9]* | wc -l')] "data.dat" i i u 1:2 lc i w lp, 0.95 lc 0 notitle
+
+unset output
+
+set terminal pdfcairo enhanced size 13cm,10cm font ',10'
+set output 'plots/cc_paper.pdf'
+set key autotitle columnhead inside
+p for [i=0:-1+system('ls -ld [0-9]* | wc -l')] "data.dat" i i u 1:2 ls 1+i%8 pt i+1 ps 0.75 lw 2 w lp, 0.95 lc 0 notitle
