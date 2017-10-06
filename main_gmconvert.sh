@@ -82,4 +82,6 @@ do
 	echo waiting for jobids=$jobids
 	#not ok is because kawabata exits 1
 	srun --job-name 'post' --dependency=afternotok:${jobids} --export=ALL,map_name=${map_name},n=${n},bindir=${bindir} --pty ${bindir}/postprocess.sh
+	mkdir -p plots
+	gnuplot ${bindir}/plot_fsc.gpl
 done

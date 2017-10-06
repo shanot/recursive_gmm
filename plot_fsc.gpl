@@ -9,12 +9,11 @@ resolution=system('cat resolution.txt')
 set logscale x 10
 set format x '%.0e'
 set logscale y 10
-set title system("echo $(ls emd*map) $(cat resolution.txt)A")
+set title system("echo $(ls emd*map *mrc) $(cat resolution.txt)A")
 set xlabel '# Gaussians'
 set ylabel sprintf('(r-resolution)/resolution')
 #system('for f in [0-9]*/*.gmm.resolution; do echo $(dirname $f) $(head -n1 $f); done | sort -g > tmp.txt')
-system('for f in [0-9]*/*.gmm.resolution; do echo $(dirname $f) $(grep -c "REMARK.*W" $(dirname $f)/$(basename $f .resolution)) $(head -n1 $f) $(cat $(dirname $f)/$(basename $f .resolution).threshold.resolution); done | sort -g > tmp.txt')
-molwt=0.0+system("grep molWtTheo header/*xml | head -n 1 | cut -d '>' -f2 | cut -d '<' -f 1")
+system('for f in [0-9]*/*.gmm.resolution; do echo $(dirname $f) $(grep -c "REMARK.*W" $(dirname $f)/$(basename $f .resolution)) $(head -n1 $f) $(cat $(dirname $f)/$(basename $f .resolution).threshold.resolution | head -n1); done | sort -g > tmp.txt')
 set key top right
 p	'tmp.txt' u 2:(abs($3-resolution)/resolution) t 'original map',\
 	'tmp.txt' u 2:(abs($3-resolution)/resolution):(sprintf("%.2f", $3)) with labels left  offset character 0.1,0.1 font ',10' notitle
