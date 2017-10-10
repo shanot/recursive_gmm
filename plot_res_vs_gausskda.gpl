@@ -1,0 +1,17 @@
+set terminal pdfcairo size 8cm, 7cm font 'helvetica,14' lw 2 enhanced
+load '~/gnuplot_config.gpl'
+
+set output 'plots/res_vs_ng.pdf'
+
+set datafile separator ";"
+set logscale x
+set xlabel '#Gaussians/kDa'
+set ylabel 'Resolution'
+set yrange [*:30]
+fit A*exp(B*x**C) 'new_table.txt' u ($6/($2*1000)):3 via A,B,C
+x=1
+set label sprintf("%.1f e^{%.1f N^{%.2f}}", A, B, C) at x,A*exp(B*x**C)+5 offset 0.5,0.25 font ',12'
+set arrow 1 from x,A*exp(B*x**C)+5 to 0.3,A*exp(B*0.3**C)
+p A*exp(B*x**C) lw 3 lc rgb '#5B9AC3' notitle,\
+  '<awk -F ";" "/FSC 0.5/{print}" new_table.txt' u ($6/($2*1000)):3 pt 7 ps 0.5 lc rgb '#8143D0' t 'FSC=0.5',\
+  '<awk -F ";" "/FSC 0.143/{print}" new_table.txt' u ($6/($2*1000)):3 pt 7 ps 0.5 lc rgb '#EC6A65' t 'FSC=0.143'
