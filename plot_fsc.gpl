@@ -1,4 +1,4 @@
-set terminal pdfcairo size 8.5cm, 5.25cm font 'helvetica,12'
+set terminal pdfcairo size 8.5cm, 5.25cm font 'helvetica,12' enhanced
 
 unset key
 set output 'plots/fscs.pdf'
@@ -18,15 +18,19 @@ set key top right
 p	'tmp.txt' u 2:(abs($3-resolution)/resolution) t 'original map',\
 	'tmp.txt' u 2:(abs($3-resolution)/resolution):(sprintf("%.2f", $3)) with labels left  offset character 0.1,0.1 font ',10' notitle
 
+
 set output 'plots/resolution_threshold.pdf'
-p	'tmp.txt' u 2:(abs($4-resolution)/resolution) t 'EMDB',\
+unset title
+set format x '10^{%T}'
+set ylabel sprintf('|Δr|/r')
+p	'tmp.txt' u 2:(abs($4-resolution)/resolution) notitle,\
 	'tmp.txt' u 2:(abs($4-resolution)/resolution):(sprintf("%.2f", $4)) with labels left  offset character 0.1,0.1 font ',10' notitle
 unset output
+unset format
 set table 'resolution_table.txt'
-set format x '%e'
 plot 'tmp.txt' u 2:(abs($4-resolution)/resolution):(sprintf("%.2f", $4)) with labels left  offset character 0.1,0.1 font ',10' notitle
-set format x '%.0e'
 #system('rm tmp.txt')
+
 
 set output 'plots/resolution_raw.pdf'
 unset logscale
