@@ -11,7 +11,6 @@ do
 			if (( $(grep -c '^CC' $f)>0 ))  
 			then
 				echo $(awk -v molWt=${molWt} '/^#Ngauss /{N=$2} /^CC /{print N/molWt,$2} ' $f)
-				#echo $(awk '/^#Ngauss /{N=$2} /^CC /{print N,$2} ' $f)
 			fi
 		done
 		echo -e '\n\n'
