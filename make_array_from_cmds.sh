@@ -5,8 +5,11 @@ echo "#!/bin/bash
 #SBATCH --array=1-$2
 
 offset=$3
-
-source ~/modules.sh
 "
+
+echo '
+bindir=$(dirname $0)
+source ${bindir}/modules.sh
+'
 
 cat

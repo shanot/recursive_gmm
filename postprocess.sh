@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source ~/modules.sh
 
 bindir=$(dirname $0)
+source ${bindir}/modules.sh
 
 for f in ${n}/slurm*out
 do
@@ -31,5 +31,5 @@ e2proc3d.py ${n}/${n}.gmm.mrc tmp.map --calcsf ${n}/${n}.gmm.mrc.sf
 awk '$2<=0.143 && y>0.143{print 1.0/(x+(0.143-y)*($1-x)/($2-y))} {x=$1;y=$2}' <  ${n}/${n}.gmm.mrc.fsc > ${n}/${n}.gmm.resolution
 awk '$2<=0.143 && y>0.143{print 1.0/(x+(0.143-y)*($1-x)/($2-y))} {x=$1;y=$2}' <  ${n}/${n}.gmm.mrc.threshold.fsc > ${n}/${n}.gmm.threshold.resolution
 
-#rm -f $n/sub*
-#rm -rf {.,$n}/tmp*
+rm -f $n/sub*
+rm -rf {.,$n}/tmp*

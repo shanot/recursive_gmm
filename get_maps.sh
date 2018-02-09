@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source ~/modules.sh
-unset http_proxy
 
 bindir=$(dirname $0)
+
+source ${bindir}/modules.sh
 
 for f in $(cat)
 do
