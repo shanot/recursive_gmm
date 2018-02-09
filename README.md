@@ -5,6 +5,7 @@ Implements divide-and-conquer gmm computation as in [1].
 ## dependencies
 
 EMAN2 (blake.bcm.edu/emanwiki/EMAN2), used to compute the FSC.
+
 gnuplot (www.gnuplot.info/)
 
 ## instalation
