@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-profile_cmd="/usr/bin/time -v"
+profile_cmd="time"
 
 map_name=$1
 threshold=$2
