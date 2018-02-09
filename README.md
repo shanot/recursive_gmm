@@ -1,27 +1,45 @@
-# recursive_gmm
+# recursive_gmconvert
 
-Implements recursive gmm computation as in [1].
+Implements divide-and-conquer gmm computation as in [1].
 
-usage:
+## dependencies
+
+EMAN2 (blake.bcm.edu/emanwiki/EMAN2), used to compute the FSC.
+
+gnuplot (www.gnuplot.info/)
+
+## instalation
+
+1. clone the repository or download the zip and extract it (we refer to the root of the source tree as `SRC_DIR`).
+2. compile gmconvert: `cd ${SRC_DIR}/gmconvert/src ; make ; cd -`
+3. if you need to run some commands before executing the scripts, place them in modules.sh
+
+## usage:
 ```
-main_gmconvert.sh MAP_NAME THRESHOLD n N
+${SRC_DIR}/recursive_gmconvert.sh MAP_NAME THRESHOLD n N i0 SERIAL
 ```
-`n` is the number of gaussians per sub-process. 4 is a good guess.
 
-`N` is how many recursion levels will be performed. The result is gmms of size `n^i` with `1<=i<=N`.
+`MAP_NAME`: the file name of the input EM map
 
-The script creates a sub-directory (called `n^i`) for each recursion level, and the output files are called `n^i.txt` and `n^i_imp.txt`.
-`n^i` contains the gmm in `gmconvert` format, and `n^i_imp.txt` contains the gmm in `IMP` format (the conversion is handeld by `gmconvert2imp.sh`.
+`THRESHOLD`: the density threshold
 
-These scripts assume that `IMP` is installed in `~/imp-fast` and that the `gmconvert` software is installed in `gmconvert_MAX_SAM`.
+`n`: number of gaussians per sub-process. 2 or 4 is a good guess.
 
-These scripts also assume that you are running a cluster with the `slurm` queuing system. 
+`N`: number recursion levels.
 
+`i0`: initial recursion level (default: 1)
+
+`SERIAL`: if set to 1, uses the serial implementation (default: 0)
+
+The script creates a sub-directory (called `i`) for each recursion level `i`, and the output files are called `i/i.gmm` and `i_imp.gmm`.
+`i/i.gmm` contains the gmm in `gmconvert` format, and `i_imp.gmm` contains the gmm in `IMP` format (the conversion is handeld by `gmconvert2imp.sh`), which can be read in IMP using `IMP.isd.gmm_tools.decorate_gmm_from_text` function.
+
+Unless you set SERIAL to 1, all the scripts assume that you are running a cluster with the `slurm` queuing system.
 
 ## References
 
-[1] Multi-scale Bayesian modeling of cryo-electron microscopy density maps
+[1] Bayesian multi-scale modeling of macromolecular structures based on cryo-electron microscopy density maps
 
 Samuel Hanot, Massimiliano Bonomi, Charles H Greenberg, Andrej Sali, Michael Nilges, Michele Vendruscolo, Riccardo Pellarin
 
-bioRxiv 113951; doi: [https://doi.org/10.1101/113951](https://doi.org/10.1101/113951)
+doi: https://doi.org/10.1101/113951
