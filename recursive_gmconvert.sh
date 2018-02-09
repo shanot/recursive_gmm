@@ -75,7 +75,7 @@ do
 		jobids=$(squeue -O arrayjobid -u $(whoami) -n ${jobname} -S i -h | tr '\n' ':' | tr -d ' ')
 		jobids=${jobids%?}
 		echo waiting for jobids=$jobids
-		#not ok is because kawabata exits 1
+		#not ok is because gmconvert exits 1
 		srun --job-name 'post' --dependency=afternotok:${jobids} --export=ALL,map_name=${map_name},n=${n},bindir=${bindir} --pty ${bindir}/postprocess.sh
 	else
 		for ((j=1 ; j<=n_jobs ; j++))
