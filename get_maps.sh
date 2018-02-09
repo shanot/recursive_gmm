@@ -16,6 +16,6 @@ do
 	echo ${cutoff} > cutoff.txt
 	echo ${resolution} > resolution.txt
 	gunzip -c map/emd_${f}.map.gz > emd_${f}.map
-	~/recursive_gmm/main_gmconvert.sh emd_${f}.map $cutoff $1 $2
+	${bindir}/recursive_gmconvert.sh emd_${f}.map $cutoff $1 $2
 	cd -
 done
